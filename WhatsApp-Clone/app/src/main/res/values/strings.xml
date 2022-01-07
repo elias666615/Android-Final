@@ -4,4 +4,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="google_maps_key_2">AIzaSyDG3mUjuaI9ydu2IkvXo_Zl9PGg64wWvgo</string>
+    <string name="add_to_contacts">Add to contacts</string>
+    <string name="search">Search</string>
+    <string name="name">Name</string>
+    <string name="save_new_name">Save new name</string>
+    <string name="change_profile">Change profile image</string>
+    <string name="email">Email</string>
+    <string name="display_name">Display name</string>
+    <string name="have_account">Already have an account?</string>
+    <string name="Next">Next</string>
+    <string name="login">Login</string>
+    <string name="enter_message">Enter message</string>
 </resources>

@@ -14,7 +14,7 @@
         android:layout_marginTop="24dp"
         android:background="@color/transparent"
         android:onClick="enterLogin"
-        android:text="Already have an account?"
+        android:text="@string/have_account"
         android:textAllCaps="false"
         android:textColor="@color/azure"
         android:textSize="16sp"
@@ -58,7 +58,7 @@
                 android:id="@+id/tit_email_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,7 +76,7 @@
                 android:id="@+id/tit_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Display name"
+                android:hint="@string/display_name"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -89,7 +89,7 @@
         android:layout_marginEnd="24dp"
         android:background="@color/transparent"
         android:onClick="register"
-        android:text="Next"
+        android:text="@string/Next"
         android:textAllCaps="false"
         android:textColor="@color/azure"
         android:textSize="16sp"
@@ -103,7 +103,7 @@
         android:layout_marginTop="16dp"
         android:background="@color/transparent"
         android:onClick="changeProfileImage"
-        android:text="Change profile image"
+        android:text="@string/change_profile"
         android:textAllCaps="false"
         android:textColor="@color/azure"
         android:textSize="16sp"

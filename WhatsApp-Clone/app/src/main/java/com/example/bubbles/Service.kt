@@ -27,6 +27,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.provider.MediaStore
+import com.example.bubbles.activities.Register
+import java.io.ByteArrayOutputStream
+
 
 object Service {
     val contacts: ArrayList<Contact> = ArrayList()
@@ -37,6 +41,7 @@ object Service {
     val storage: StorageReference = Firebase.storage.reference
     val messageList: ArrayList<ChatMessage> = ArrayList()
     var chatId: String = ""
+    var ReceiverName: String = ""
     var lat: Double = 0.0
     var long: Double = 0.0
     val allUsers: ArrayList<UserReference> = ArrayList()
@@ -45,6 +50,7 @@ object Service {
         val key = database.getReference("users").push().key
         user_id = key.toString()
         database.getReference("users").child(key!!).setValue(user).addOnFailureListener {
+        }.addOnSuccessListener {
         }
         val search_key = database.getReference("search").push().key
         database.getReference("search").child(search_key!!).setValue(UserSearch(user.name, key, user.profile_image))
@@ -92,23 +98,30 @@ object Service {
             val localFile = File.createTempFile(image_name, "jpeg")
             imageRef.getFile(localFile).addOnSuccessListener {
                 val bitmap: Bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-                contacts.add(Contact(user_data["name"]!!, data["token"], bitmap, data["chatId"]!!, data["unread_messages"]!!, data["last_spoke"], data["last_message"]))
+                contacts.add(Contact(user_data["name"]!!, bitmap, data["chatId"]!!))
                 adapter.notifyItemInserted(contacts.size-1)
             }
         }
     }
 
     fun addSearchItem(data: HashMap<String, String>, adapter: SearchResultsAdapter) {
-        val imageName = data["imageUri"]
-        val imageRef = storage.child("profile_images/$imageName")
-        val localFile = File.createTempFile(imageName, "jpeg")
-        imageRef.getFile(localFile).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-            searchUsers.add(UserSearchItem(data["name"]!!, data["user_id"]!!, bitmap))
-            adapter.notifyDataSetChanged()
-        }.addOnFailureListener {
-            searchUsers.add(UserSearchItem(data["name"]!!, data["user_id"]!!))
-            adapter.notifyDataSetChanged()
+        if (data["user_id"] != user_id ) {
+            val imageName = data["imageUri"]
+            if(imageName != null) {
+                val imageRef = storage.child("profile_images/$imageName")
+                val localFile = File.createTempFile(imageName, "jpeg")
+                imageRef.getFile(localFile).addOnSuccessListener {
+                    val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+                    searchUsers.add(UserSearchItem(data["name"]!!, data["user_id"]!!, bitmap))
+                    adapter.notifyDataSetChanged()
+                }.addOnFailureListener {
+
+                }
+            }
+            else {
+                searchUsers.add(UserSearchItem(data["name"]!!, data["user_id"]!!))
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 
@@ -156,5 +169,12 @@ object Service {
             override fun onCancelled(databaseError: DatabaseError) {}
         }
         reference.addChildEventListener(childEventListener)
+    }
+
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
     }
 }

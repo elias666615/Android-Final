@@ -53,6 +53,7 @@ class SearchResultsAdapter(
         val searchItem = dataSet[position]
         holder.name.setText(searchItem.name)
         if (searchItem.imageBitmap != null) holder.image.setImageBitmap(searchItem.imageBitmap)
+        else holder.image.setImageResource(R.drawable.default_profile)
     }
 
     override fun getItemCount(): Int {

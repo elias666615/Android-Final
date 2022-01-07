@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.example.bubbles.adapters.SearchResultsAdapter.OnItemClickListener
+import java.io.Serializable
 
 
 class contacts : Fragment(), OnItemClickListener {
@@ -67,6 +68,7 @@ class contacts : Fragment(), OnItemClickListener {
 
     override fun onItemClick(position: Int) {
         Service.chatId = Service.contacts[position].chatId
+        Service.ReceiverName = Service.contacts[position].name
         val intent = Intent(this.context, chat::class.java)
         startActivity(intent)
     }

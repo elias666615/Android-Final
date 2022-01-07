@@ -18,8 +18,6 @@ class ContactsAdapter(
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
         val image: ImageView = view.findViewById(R.id.iv_profile_image)
         val name: TextView = view.findViewById(R.id.tv_name)
-        val last_spoke: TextView = view.findViewById(R.id.tv_last_spoke)
-        val last_message: TextView = view.findViewById(R.id.tv_last_message)
 
         init {
             view.setOnClickListener(this)
@@ -42,19 +40,8 @@ class ContactsAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val contactItem = contactList[position]
         viewHolder.name.setText(contactItem.name)
-        viewHolder.image.setImageBitmap(contactItem.profile_image)
-        if (contactItem.lastSpoke == null) {
-            viewHolder.last_spoke.setText("new")
-        }
-        else {
-            viewHolder.last_spoke.setText(viewHolder.last_spoke.toString())
-        }
-        if (contactItem.lastMessage == null) {
-            viewHolder.last_message.setText("no messages yet")
-        }
-        else {
-            viewHolder.last_message.setText(contactItem.lastMessage.toString())
-        }
+        if(contactItem.profile_image != null) { viewHolder.image.setImageBitmap(contactItem.profile_image) }
+        else { viewHolder.image.setImageResource(R.drawable.default_profile) }
     }
 
     override fun getItemCount() = contactList.size

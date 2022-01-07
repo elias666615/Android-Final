@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import com.example.bubbles.adapters.SearchResultsAdapter.OnItemClickListener
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -48,9 +49,8 @@ class chat : AppCompatActivity(), OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        FirebaseInstallations.getInstance().id.addOnSuccessListener {
-
-        }
+        val name = findViewById<TextView>(R.id.tv_reciver_name)
+        name.setText(Service.ReceiverName)
 
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 

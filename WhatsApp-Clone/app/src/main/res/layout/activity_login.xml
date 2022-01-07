@@ -26,7 +26,7 @@
             android:id="@+id/tit_email_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Email" />
+            android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -37,9 +37,21 @@
         android:layout_marginEnd="24dp"
         android:background="@color/transparent"
         android:onClick="Login"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="@color/azure"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="64dp"
+        android:text="@string/app_name"
+        android:textColor="@color/azure"
+        android:textSize="60sp"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

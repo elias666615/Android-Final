@@ -1,6 +1,8 @@
 package com.example.bubbles.activities
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -25,7 +27,7 @@ class Register : FragmentActivity(), ChangeImageDialogFragment.ChangeImageDialog
     private lateinit var profile_image: ImageView;
     private lateinit var photoFile: File
     private val FILE_NAME = "photo.jpg"
-    private lateinit var ImageUri: Uri;
+    private var ImageUri: Uri? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,16 +52,22 @@ class Register : FragmentActivity(), ChangeImageDialogFragment.ChangeImageDialog
             return
         }
         else {
-            val imageName: String = Service.uploadImage(ImageUri)
-            if (imageName == "") Toast.makeText(applicationContext, "Image upload failed", Toast.LENGTH_SHORT).show()
-            else Toast.makeText(applicationContext, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
-            FirebaseInstallations.getInstance().id.addOnSuccessListener {
-                val user = User(email.text.toString(), name.text.toString(), imageName, it)
-                Service.addUser(user)
+            var imageName: String? = null
+            if(ImageUri != null) {
+                imageName = Service.uploadImage(ImageUri!!)
+                if (imageName == "") Toast.makeText(applicationContext, "Image upload failed", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(applicationContext, "Image uploaded successfully", Toast.LENGTH_SHORT).show()
             }
+            val user = User(email.text.toString(), name.text.toString(), imageName)
+            Service.addUser(user)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun test() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
     fun changeProfileImage(view: View) {
@@ -74,17 +82,11 @@ class Register : FragmentActivity(), ChangeImageDialogFragment.ChangeImageDialog
     }
 
     override fun onDialogNegativeClick(dialog: DialogFragment) {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        photoFile = getPhotoFile(FILE_NAME)
-
-        val fileProvider = FileProvider.getUriForFile(this, "com.example.bubbles.fileprovider", photoFile)
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
-
-        if (takePictureIntent.resolveActivity((this.packageManager)) != null) {
+       val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        }
-        else {
-            Toast.makeText(applicationContext, "Unable to open camera", Toast.LENGTH_SHORT).show()
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(applicationContext, "Could Not Open Camera", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -95,10 +97,9 @@ class Register : FragmentActivity(), ChangeImageDialogFragment.ChangeImageDialog
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            val imageBitmap = data?.extras?.get("data") as Bitmap
-            println(photoFile)
-            val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
-            profile_image.setImageBitmap(takenImage)
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            ImageUri = Service.getImageUri(this, imageBitmap)
+            profile_image.setImageBitmap(imageBitmap)
         }
         else if (requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK && data != null && data.data != null) {
             ImageUri = data.data!!
